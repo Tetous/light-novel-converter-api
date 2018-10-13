@@ -22,7 +22,6 @@ export const create = async ({ user, bodymen: { body } }, res, next) => {
   if(story){ // Yes
     // Lets get the story data
     let storyData = await getStoryData(story);
-    
     if(storyData instanceof Error){ // Did we get any errors?
       res.status(500);
       res.send(storyData);

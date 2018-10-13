@@ -13,7 +13,6 @@ export const getStoryData = async (story) => {
 	try{
 		// Get the site from the story
 		let site = getSiteFromUrl(story.url);
-		console.log(site);
 		// Use the site-specific scraper to get the data
 		const browser = await puppeteer.connect({ browserWSEndpoint: scraperAddress });
 	  const page = await browser.newPage();
