@@ -11,7 +11,7 @@
     "dev": "nodemon -i \"*.test.js\" .",
     "prod": "cross-env NODE_ENV=production nodemon -i \"*.test.js\" -r dotenv-safe/config .",
     "lint": "eslint src",
-    "docs": "apidoc -i src -o docs && apidoc-markdown -p docs -o DOCS.md",
+    "docs": "apidoc -i src -o docs",
     "postdocs": "opn docs/index.html"
   },
   "jest": {
@@ -20,7 +20,6 @@
   },
   "devDependencies": {
     "apidoc": "^0.17.6",
-    "apidoc-markdown": "^0.2.0",
     "babel-eslint": "^8.0.1",
     "babel-jest": "^20.0.3",
     "cross-env": "^5.0.5",
