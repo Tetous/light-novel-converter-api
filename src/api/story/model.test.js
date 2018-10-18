@@ -5,7 +5,7 @@ let user, story
 
 beforeEach(async () => {
   user = await User.create({ email: 'a@a.com', password: '123456' })
-  story = await Story.create({ user, url: 'test', title: 'test', metadata: [], chapters: [], bio: 'test', cover: 'test' })
+  story = await Story.create({ user, url: 'test', title: 'test', downloading: false, metadata: [], chapters: [], cover: 'test' })
 })
 
 describe('view', () => {
@@ -17,9 +17,9 @@ describe('view', () => {
     expect(typeof view.user).toBe('object')
     expect(view.user.id).toBe(user.id)
     expect(view.url).toBe(story.url)
+    expect(view.downloading).toBe(story.downloading)
     expect(view.metadata).toBe(story.metadata)
     expect(view.chapters).toBe(story.chapters)
-    expect(view.bio).toBe(story.bio)
     expect(view.cover).toBe(story.cover)
     expect(view.createdAt).toBeTruthy()
     expect(view.updatedAt).toBeTruthy()
@@ -33,9 +33,9 @@ describe('view', () => {
     expect(typeof view.user).toBe('object')
     expect(view.user.id).toBe(user.id)
     expect(view.url).toBe(story.url)
+    expect(view.downloading).toBe(story.downloading)
     expect(view.metadata).toBe(story.metadata)
     expect(view.chapters).toBe(story.chapters)
-    expect(view.bio).toBe(story.bio)
     expect(view.cover).toBe(story.cover)
     expect(view.createdAt).toBeTruthy()
     expect(view.updatedAt).toBeTruthy()

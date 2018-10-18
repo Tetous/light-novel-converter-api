@@ -2,7 +2,7 @@ import { Router } from 'express'
 import { middleware as query } from 'querymen'
 import { middleware as body } from 'bodymen'
 import { token } from '../../services/passport'
-import { create, index, show, update, destroy } from './controller'
+import { create, index, show, update, destroy, download_chapters } from './controller'
 import { schema } from './model'
 export Story, { schema } from './model'
 
@@ -59,6 +59,21 @@ router.get('/',
 router.get('/:id',
   token({ required: true }),
   show)
+
+/**
+ * @api {get} /stories/:id/download_chapters Download chapters
+ * @apiName DownloadChaptersStory
+ * @apiGroup Story
+ * @apiPermission user
+ * @apiParam {String} access_token user access token.
+ * @apiSuccess {Bool} result Chapters downloaded
+ * @apiError {Object} 400 Some parameters may contain invalid values.
+ * @apiError 404 Story not found.
+ * @apiError 401 user access only.
+ */
+router.get('/:id/download_chapters',
+  token({ required: true }),
+  download_chapters)
 
 /**
  * @api {put} /stories/:id Update story

@@ -9,7 +9,7 @@ export const novelplanet = {
     let metadata = new Object();
     metadataHtml.each(function(i, elem) {
       // Name of attribute
-      let attributeName = $(this).text().replace(':', '').trim();
+      let attributeName = $(this).text().replace(':', '').trim().replace(' ', '_').toLowerCase();
       let attributeValue = "";
       // Get the siblings
       let siblings = $(this).nextAll();
@@ -25,6 +25,8 @@ export const novelplanet = {
       // Store it
       metadata[attributeName] = attributeValue;
     });
+    // Now get the bio (which is two nodes after the metadata)
+    metadata['bio'] = $('.post-contentDetails').next().next().text().trim();
     return metadata;
   },
   getChapters: function($) {
@@ -41,6 +43,7 @@ export const novelplanet = {
         chapterObject.title = chapterLink.text().trim();
         chapterObject.url   = chapterLink.attr("href");
         chapterObject.upload_date   = chapterDate.text().replace('(', '').replace(')', '');
+        chapterObject.downloaded = false;
         // Add it to the array
         chapters.push(chapterObject);
       });
@@ -57,11 +60,34 @@ export const novelplanet = {
       let storydata = new Object();
       storydata.title = this.getTitle($);
       storydata.metadata = this.getMetadata($);
+      console.log(storydata.metadata);
       storydata.chapters = this.getChapters($);
       return storydata;
     } catch (error) {
       console.log(error)
       return error;
     } 
+  },
+  getChapterContent: async function(page){
+    try {
+      // Wait until it loads
+      await page.waitFor('#divReadContent');
+      // Get all the html
+      let bodyHTML = await page.evaluate(() => document.body.innerHTML);
+      const $ = cheerio.load(bodyHTML);
+      var chapterHtml = $("#divReadContent");
+      let chapterText = this.removeAds(chapterHtml).html().trim();
+      return chapterText;
+    } catch (error) {
+      console.log(error)
+      return error;
+    } 
+  },
+  removeAds: function(text){
+    // Remove all nodes inside that are iframes
+    text.find("iframe").remove();
+    // TODO: Get a better check. Maybe some stories do use divs?
+    text.find("div").remove();
+    return text;
   }
 }

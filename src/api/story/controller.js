@@ -1,6 +1,6 @@
 import { success, notFound, authorOrAdmin } from '../../services/response/'
 import { Story } from '.'
-import { getStoryData } from '../../services/scraper'
+import { getStoryData, downloadChapters } from '../../services/scraper'
 
 export const create = async ({ user, bodymen: { body } }, res, next) => {
   let possibleError = null;
@@ -27,7 +27,7 @@ export const create = async ({ user, bodymen: { body } }, res, next) => {
       res.send(storyData);
     }
     else{
-      story.chapters = storyData.chapters;
+      story.chapters = storyData.chapters.reverse();
       story.metadata = storyData.metadata;
       story.title    = storyData.title;
       await story.save();
@@ -41,7 +41,7 @@ export const create = async ({ user, bodymen: { body } }, res, next) => {
 export const index = ({ querymen: { query, select, cursor } }, res, next) =>
   Story.find(query, select, cursor)
     .populate('user')
-    .then((stories) => stories.map((story) => story.view()))
+    .then((stories) => stories.map((story) => story.general_view()))
     .then(success(res))
     .catch(next)
 
@@ -53,7 +53,42 @@ export const show = ({ params }, res, next) =>
     .then(success(res))
     .catch(next)
 
-export const update = ({ user, bodymen: { body }, params }, res, next) =>
+export const download_chapters = async ({ params }, res, next) => {
+  let story = await Story.findById(params.id)
+    //.populate('user')
+    .then(notFound(res))
+    //.then((story) => story.download_chapters())
+    //.then(success(res))
+    .catch(next)
+  //let result = await downloadChapters(story);
+  console.log("Prechapter");
+  // Is it already downloading?
+  if(story.downloading){
+    res.status(200);
+    res.send(story.view());
+  }
+  else{
+    // Mark story as currently being downloaded
+    res.status(200);
+    res.send(story.view());
+    story.downloading  = true;
+    await story.save();
+    let result = await downloadChapters(story);
+    if(result == true){
+      // Mark all chapters as downloaded
+      var chapters = story.chapters;
+      for(var i = 0; i<chapters.length; i++){
+        chapters[i].downloaded = true;
+      }
+      await Object.assign(story, {chapters: chapters}).save()
+    }
+    // Mark as not downloading
+    story.downloading  = false;
+    await story.save();
+  }
+}
+
+export const update = ({ user, bodymen: { body }, params }, res, next) => {
   Story.findById(params.id)
     .populate('user')
     .then(notFound(res))
@@ -62,6 +97,8 @@ export const update = ({ user, bodymen: { body }, params }, res, next) =>
     .then((story) => story ? story.view(true) : null)
     .then(success(res))
     .catch(next)
+  // Now we should get the new data
+}
 
 export const destroy = ({ user, params }, res, next) =>
   Story.findById(params.id)

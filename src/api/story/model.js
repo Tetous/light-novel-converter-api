@@ -1,5 +1,6 @@
 import mongoose, { Schema } from 'mongoose'
 import { getMetadata } from '../../services/scraper'
+import { downloadChapters } from '../../services/scraper'
 
 const storySchema = new Schema({
   user: {
@@ -15,14 +16,15 @@ const storySchema = new Schema({
   title: {
     type: String
   },
+  downloading: {
+    type: Boolean,
+    default: false
+  },
   metadata: {
-    type: Array
+    type: Object
   },
   chapters: {
     type: Array
-  },
-  bio: {
-    type: String
   },
   cover: {
     type: String
@@ -43,9 +45,9 @@ storySchema.methods = {
       title: this.title,
       user: this.user.view(full),
       url: this.url,
+      downloading: this.downloading,
       metadata: this.metadata,
       chapters: this.chapters,
-      bio: this.bio,
       cover: this.cover,
       createdAt: this.createdAt,
       updatedAt: this.updatedAt
@@ -55,6 +57,26 @@ storySchema.methods = {
       ...view
       // add properties for a full view
     } : view
+  },
+  general_view (full) {
+    const view = {
+      id: this.id,
+      title: this.title,
+      url: this.url,
+      downloading: this.downloading,
+      chapter_count: this.chapters.length,
+      createdAt: this.createdAt,
+      updatedAt: this.updatedAt
+    }
+
+    return full ? {
+      ...view
+      // add properties for a full view
+    } : view
+  },
+  download_chapters (full) {
+    downloadChapters(this)
+    return true
   }
 }
 
