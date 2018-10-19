@@ -8,12 +8,17 @@ It connects to a Headless Chrome instance running inside a Docker container to m
 - NovelPlanet
   - Getting metadata
   - Getting chapter list
+  - Downloading chapters
+  - Combine all chapters into one file
+  - Convert compilation of chapters into .mobi
+  - Download result
 
 ## Requirements
 
 - [NodeJS](https://nodejs.org/en/)
 - [MongoDB](https://www.mongodb.com/)
 - A Docker container running [Browserless](https://github.com/joelgriffith/browserless)
+- [Calibre CLI Tools](https://manual.calibre-ebook.com/generated/en/cli-index.html) installed
 
 ## Initial Configuration
 
