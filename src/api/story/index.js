@@ -2,7 +2,7 @@ import { Router } from 'express'
 import { middleware as query } from 'querymen'
 import { middleware as body } from 'bodymen'
 import { token } from '../../services/passport'
-import { create, index, show, update, destroy, download, convert, get_result } from './controller'
+import { create, index, show, update, destroy, download, convert, get_result, add_cover } from './controller'
 import { schema } from './model'
 export Story, { schema } from './model'
 
@@ -78,7 +78,7 @@ router.get('/:id',
 router.put('/:id',
   token({ required: true }),
   body({ url, metadata, bio, cover }),
-  update)
+  add_cover)
 
 /**
  * @api {delete} /stories/:id Delete story

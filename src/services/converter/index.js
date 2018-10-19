@@ -33,9 +33,13 @@ export const convertStory = async (story, force=false) => {
 		  bio: '"' + story.metadata['bio'] + '"',
 		  language: 'en'
 		}
+		// Check for the cover
+		if(story.cover !== "undefined"){
+			convertionOptions.cover = story.cover;
+		}
 
   	await exec(`
-  		ebook-convert ${convertionOptions.input} ${convertionOptions.output} --output-profile ${convertionOptions.output_profile} --title ${convertionOptions.title} --publisher ${convertionOptions.publisher} --authors ${convertionOptions.authors} --comments ${convertionOptions.bio} --book-producer ${convertionOptions.book_producer} --language ${convertionOptions.language}
+  		ebook-convert ${convertionOptions.input} ${convertionOptions.output} --output-profile ${convertionOptions.output_profile} --title ${convertionOptions.title} --publisher ${convertionOptions.publisher} --authors ${convertionOptions.authors} --comments ${convertionOptions.bio} --book-producer ${convertionOptions.book_producer} --language ${convertionOptions.language} --cover ${convertionOptions.cover}
   	`);
 
 		console.log("Done!");

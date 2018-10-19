@@ -139,12 +139,24 @@ export const update = ({ user, bodymen: { body }, params }, res, next) => {
   Story.findById(params.id)
     .populate('user')
     .then(notFound(res))
-    .then(authorOrAdmin(res, user, 'user'))
+    //.then(authorOrAdmin(res, user, 'user'))
     .then((story) => story ? Object.assign(story, body).save() : null)
     .then((story) => story ? story.view(true) : null)
     .then(success(res))
     .catch(next)
-  // Now we should get the new data
+}
+
+export const add_cover = ({ user, bodymen: { body }, params }, res, next) => {
+  Story.findById(params.id)
+    .then(notFound(res))
+    .then((story) => {
+      story.cover = body.cover;
+      return story;
+    })
+    .then((story) => story ? story.save() : null)
+    .then((story) => story ? story.view(true) : null)
+    .then(success(res))
+    .catch(next)
 }
 
 export const destroy = ({ user, params }, res, next) =>
