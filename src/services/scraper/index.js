@@ -43,7 +43,7 @@ export const downloadChapters = async (story, force=false) => {
 		var page = await browser.newPage();
 		// Lets just set the check at 9 to test
 		// TODO: Put this as env variable, with a default
-		const timeoutCheck = 9;
+		const timeoutCheck = 8;
 	try{
 		// Get all the chapters
 		for(var i = 0; i<story.chapters.length; i++){
