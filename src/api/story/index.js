@@ -2,7 +2,7 @@ import { Router } from 'express'
 import { middleware as query } from 'querymen'
 import { middleware as body } from 'bodymen'
 import { token } from '../../services/passport'
-import { create, index, show, update, destroy, download_chapters } from './controller'
+import { create, index, show, update, destroy, download, convert, get_result } from './controller'
 import { schema } from './model'
 export Story, { schema } from './model'
 
@@ -61,21 +61,6 @@ router.get('/:id',
   show)
 
 /**
- * @api {get} /stories/:id/download_chapters Download chapters
- * @apiName DownloadChaptersStory
- * @apiGroup Story
- * @apiPermission user
- * @apiParam {String} access_token user access token.
- * @apiSuccess {Bool} result Chapters downloaded
- * @apiError {Object} 400 Some parameters may contain invalid values.
- * @apiError 404 Story not found.
- * @apiError 401 user access only.
- */
-router.get('/:id/download_chapters',
-  token({ required: true }),
-  download_chapters)
-
-/**
  * @api {put} /stories/:id Update story
  * @apiName UpdateStory
  * @apiGroup Story
@@ -108,5 +93,50 @@ router.put('/:id',
 router.delete('/:id',
   token({ required: true }),
   destroy)
+
+/**
+ * @api {get} /stories/:id/download Download chapters
+ * @apiName DownloadChaptersStory
+ * @apiGroup Story
+ * @apiPermission user
+ * @apiParam {String} access_token user access token.
+ * @apiSuccess {Bool} result Chapters downloaded
+ * @apiError {Object} 400 Some parameters may contain invalid values.
+ * @apiError 404 Story not found.
+ * @apiError 401 user access only.
+ */
+router.get('/:id/download',
+  token({ required: true }),
+  download)
+
+/**
+ * @api {get} /stories/:id/convert Converts chapters
+ * @apiName ConvertChaptersStory
+ * @apiGroup Story
+ * @apiPermission user
+ * @apiParam {String} access_token user access token.
+ * @apiSuccess {Bool} result Chapters converted
+ * @apiError {Object} 400 Some parameters may contain invalid values.
+ * @apiError 404 Story not found.
+ * @apiError 401 user access only.
+ */
+router.get('/:id/convert',
+  token({ required: true }),
+  convert)
+
+/**
+ * @api {get} /stories/:id/get_result Gets conversion result
+ * @apiName GetStoryResult
+ * @apiGroup Story
+ * @apiPermission user
+ * @apiParam {String} access_token user access token.
+ * @apiSuccess {File} result Converted Story
+ * @apiError {Object} 400 Some parameters may contain invalid values.
+ * @apiError 404 Story not found.
+ * @apiError 401 user access only.
+ */
+router.get('/:id/result',
+  token({ required: true }),
+  get_result)
 
 export default router

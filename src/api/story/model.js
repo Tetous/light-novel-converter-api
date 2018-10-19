@@ -16,9 +16,12 @@ const storySchema = new Schema({
   title: {
     type: String
   },
-  downloading: {
+  working: {
     type: Boolean,
     default: false
+  },
+  status: {
+    type: String
   },
   metadata: {
     type: Object
@@ -45,7 +48,8 @@ storySchema.methods = {
       title: this.title,
       user: this.user.view(full),
       url: this.url,
-      downloading: this.downloading,
+      working: this.working,
+      current_status: this.status,
       metadata: this.metadata,
       chapters: this.chapters,
       cover: this.cover,
@@ -63,7 +67,8 @@ storySchema.methods = {
       id: this.id,
       title: this.title,
       url: this.url,
-      downloading: this.downloading,
+      working: this.working,
+      current_status: this.status,
       chapter_count: this.chapters.length,
       createdAt: this.createdAt,
       updatedAt: this.updatedAt
