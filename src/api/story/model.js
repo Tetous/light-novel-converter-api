@@ -10,7 +10,6 @@ const storySchema = new Schema({
   },
   url: {
     type: String,
-    required: true,
     unique: true
   },
   title: {
@@ -23,14 +22,14 @@ const storySchema = new Schema({
   status: {
     type: String
   },
+  cover: {
+    type: String
+  },
   metadata: {
     type: Object
   },
   chapters: {
     type: Array
-  },
-  cover: {
-    type: String
   }
 }, {
   timestamps: true,
@@ -50,9 +49,9 @@ storySchema.methods = {
       url: this.url,
       working: this.working,
       current_status: this.status,
+      cover: this.cover,
       metadata: this.metadata,
       chapters: this.chapters,
-      cover: this.cover,
       createdAt: this.createdAt,
       updatedAt: this.updatedAt
     }
